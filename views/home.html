@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en-us" ng-app = "myApp" ng-controller="homeController">
+<html lang="en-us" ng-app = "CodeBreaker" ng-controller="homeController">
 
 <head>
     <title>Home</title>
@@ -10,12 +10,55 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script src="/public/libs/angular/angular.js"></script>
     <script src="/public/libs/angular-ui-router/release/angular-ui-router.js"></script>
-    <script src="home.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.min.js"></script>
+    <script src="../view_controller/homeController.js"></script>
+    <script type="text/javascript">
+
+    window.onerror = function(msg, url, linenumber) {
+        alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber);
+        return true;
+    }
+
+    </script>
     <link href="home.css" type="text/css" rel="stylesheet">
 </head>
 
 <body>
-    
+
+    <div>
+        <textarea id="cipher" placeholder="type your cipher" rows="5" cols="50" ng-model="cipher" ng-change="cipherChanged()"></textarea>
+    </div>
+
+    <div id="replace">
+        <input id="replacee" type="text" placeholder="Put the String that is to be replaced" size="27" ng-model="replacee" ng-change="replaceChanged()"/>
+        <br />
+        <input id="replacer" type="text" placeholder="Put the String that is to replace" size="27" ng-model="replacer" ng-change="replaceChanged()"/>
+    </div>
+
+    <div id="replacedText">
+        <p>
+            <span style="white-space:pre-wrap;font-size:2em;">{{replacedText}}</span>
+        </p>
+    </div>
+
+    <div id="remainingLetters">
+        <p>
+            Click the below button if you want to show the letters have not yet replace any other letter
+        </p>
+        <button id="remainingLettersBtn" type="button" ng-click="remainingLettersBtnClicked()">Show</button>
+        <p>
+            {{remainingLetters}}
+        </p>
+    </div>
+
+    <div id="frequencies">
+        <p>
+            <span style="white-space:pre-wrap;">{{frequenciesString}}</span>
+        </p>
+    </div>
+
+
+
 </body>
 
 </html>
