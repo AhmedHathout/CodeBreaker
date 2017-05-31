@@ -25,36 +25,80 @@
 
 <body>
 
-    <div>
-        <textarea id="cipher" placeholder="type your cipher" rows="5" cols="50" ng-model="cipher" ng-change="cipherChanged()"></textarea>
-    </div>
+    <nav class="navbar navbar-inverse bg-inverse">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">CodeBreaker</a>
+            </div>
 
-    <div id="replace">
-        <input id="replacee" type="text" placeholder="Put the String that is to be replaced" size="27" ng-model="replacee" ng-change="replaceChanged()"/>
-        <br />
-        <input id="replacer" type="text" placeholder="Put the String that is to replace" size="27" ng-model="replacer" ng-change="replaceChanged()"/>
-    </div>
+            <div id="myNavbar">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="/">Decrypt</a>
+                    </li>
+                    <li>
+                        <a href="/">Encrypt</a>
+                    </li>
+                    <li>
+                        <a href="/about">About</a>
+                    </li>
+                </ul>
+            </div>
 
-    <div id="replacedText">
-        <p>
-            <span style="white-space:pre-wrap;font-size:2em;">{{replacedText}}</span>
-        </p>
-    </div>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+                </li>
+                <li>
+                    <a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+                </li>
+            </ul>
 
-    <div id="remainingLetters">
-        <p>
-            Click the below button if you want to show the letters have not yet replace any other letter
-        </p>
-        <button id="remainingLettersBtn" type="button" ng-click="remainingLettersBtnClicked()">Show</button>
-        <p>
-            {{remainingLetters}}
-        </p>
-    </div>
+        </div>
+    </nav>
 
-    <div id="frequencies">
-        <p>
-            <span style="white-space:pre-wrap;">{{frequenciesString}}</span>
-        </p>
+    <div class="container-fluid" id="mainContainer">
+        <div>
+            <textarea id="cipher" placeholder="type your cipher" rows="5" cols="50" ng-model="cipher" ng-change="cipherChanged()"></textarea>
+        </div>
+
+        <div id="replace">
+            <input id="replacee" type="text" placeholder="Put the String that is to be replaced" size="30" ng-model="replacee" ng-change="replaceChanged()"/>
+            <br />
+            <input id="replacer" type="text" placeholder="Put the String that is to replace" size="30" ng-model="replacer" ng-change="replaceChanged()"/>
+        </div>
+
+        <div id="replaced">
+            <p>
+                <span style="white-space:pre-wrap;font-size:2em;">{{replacedText}}</span>
+            </p>
+        </div>
+
+        <div id="error">
+            <div class="alert alert-danger" id="replacedText" ng-show="showLengthErrorMessage || showDuplicatesErrorMessage">
+                <p ng-show="showLengthErrorMessage">
+                    {{lengthError}}<br />
+                </p>
+                <p ng-show="showDuplicatesErrorMessage">
+                    {{duplicatesError}}
+                </p>
+            </div>
+
+        <div id="remainingLetters">
+            <p>
+                Click the below button if you want to show the letters that have not yet replaced any other letter
+            </p>
+            <button id="remainingLettersBtn" type="button" ng-click="remainingLettersBtnClicked()">Show</button>
+            <p>
+                {{remainingLetters}}
+            </p>
+        </div>
+
+        <div id="frequencies">
+            <p>
+                <span style="white-space:pre-wrap;">{{frequenciesString}}</span>
+            </p>
+        </div>
     </div>
 
 

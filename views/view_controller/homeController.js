@@ -2,41 +2,67 @@ var appname = angular.module('CodeBreaker', []);
 appname.controller('homeController', ['$scope',
     function($scope) {
 
-        $scope.greeting = { text: 'Hello' };
-
         $scope.cipherChanged = function() {
-            // var output = $scope.sort($scope.printFrequencies($scope.getFrequency()), $scope.sort($scope.getFrequency()))
+
             $scope.printFrequencies();
             $scope.replace();
             $scope.remainingLetters = "";
-            // alert($scope.showRemainingLetters)
-            // alert(typeof 1)
-            // alert(output)
-            // alert("fdsaf")
+
         }
 
         $scope.replaceChanged = function() {
+
             $scope.replace();
             $scope.remainingLetters = "";
+
         }
 
         $scope.remainingLettersBtnClicked = function() {
+
             $scope.getRemainingLetters();
+
         }
 
 
         $scope.replace = function() {
 
-    		$scope.replacedText = "";
 
     		let text = angular.element($('#cipher')).val();
             let replacee = $scope.replacee;
             let replacer = $scope.replacer;
-            // alert(replacer)
+            let error = false;
+            $scope.showDuplicatesErrorMessage = false;
+            $scope.showLengthErrorMessage = false;
 
-    		// let replacee = angular.element($('#replacee')).val();
-    		// let replacer = angular.element($('#replacer')).val();
-            // let text = "sf"
+            if ($scope.containsDuplicates(replacee)) {
+                $scope.duplicatesError = "Duplicate(s) in the replacee field"
+                $scope.showDuplicatesErrorMessage = true;
+                error = true;
+            }
+
+            else if ($scope.containsDuplicates(replacer)) {
+                $scope.duplicatesError = "Duplicate(s) in the replacer field"
+                $scope.showDuplicatesErrorMessage = true;
+                error = true;
+            }
+
+            else
+                $scope.duplicatesError = "";
+
+            if (replacer.length != replacee.length) {
+                $scope.lengthError = "The 2 Strings do not have the same length";
+                $scope.showLengthErrorMessage = true;
+                error = true;
+            }
+
+            else {
+                $scope.replacedText = "";
+                $scope.lengthError = "";
+            }
+
+            if (error)
+                return;
+
     		for (var i = 0; i < text.length; i++) {
 
     			var currentChar = text.charAt(i);
@@ -72,11 +98,14 @@ appname.controller('homeController', ['$scope',
     		var frequencies = Array(26).fill(0);
 
     		for (var i = 0; i < text.length; i++) {
+
     			var currentChar = text.charAt(i);
+
     			if (currentChar <= 'Z' && currentChar >= 'A') {
                     var index = (text.charAt(i)).charCodeAt(0) - 'A'.charCodeAt(0)
                     frequencies[index]++;
                 }
+
     		}
 
             $scope.frequencies = frequencies;
@@ -115,70 +144,71 @@ appname.controller('homeController', ['$scope',
     		}
 
             $scope.alphabet = alphabet;
-            // alert(alphabet)
     		return alphabet;
     	}
 
-	$scope.printFrequencies = function() {
+    	$scope.printFrequencies = function() {
 
-		var frequencies = $scope.getFrequency();
-		var alphabet = $scope.sort(frequencies);
-        // alert(alphabet)
-        $scope.frequenciesString = "";
-		for (var i = 26 - 1; i >= 0; i--) {
+    		var frequencies = $scope.getFrequency();
+    		var alphabet = $scope.sort(frequencies);
+            $scope.frequenciesString = "";
 
-			if (frequencies[i] == 0)
-				continue;
+    		for (var i = 26 - 1; i >= 0; i--) {
 
-			var frequency = frequencies[i];
-            // alert("test" + alphabet[i])
-            // alert(alphabet[i] + "\tFrequency = "+ frequency)
-            $scope.frequenciesString += (alphabet[i] + "\tFrequency = " + frequency + "\n")
+    			if (frequencies[i] == 0)
+    				continue;
 
-		}
+    			var frequency = frequencies[i];
+                $scope.frequenciesString += (alphabet[i] + "\tFrequency = " + frequency + "\n")
 
-        // alert(output)
-
-	}
-
-	$scope.getRemainingLetters = function() {
-
-        // alert("remainingLetters")
-        let replacer = $scope.replacer;
-		var occured = Array(26).fill(false);
-        $scope.remainingLetters = "";
-
-		for (var i = 0; i < replacer.length; i++) {
-
-			var currentChar = replacer.charAt(i);
-            // alert(currentChar)
-			occured[currentChar.charCodeAt(0) - "a".charCodeAt(0)] = true;
-
-		}
-
-		for (var i = 0; i < occured.length; i++) {
-
-			if (!occured[i]) {
-                // alert(occured)
-                $scope.remainingLetters += String.fromCharCode(i + "a".charCodeAt(0));
-                // alert(String.fromCharCode(i + "a".charCodeAt(0)))
-			}
-		}
+    		}
 
 
-	}
+    	}
 
-	// public static void read() throws IOException {
-    //
-	// 	while (true) {
-	// 		String line = br.readLine();
-	// 		text += line + '\n';
-	// 		if (line.charAt(line.length() - 1) == '0')
-	// 			break;
-	// 	}
-    //
-	// }
+    	$scope.getRemainingLetters = function() {
 
+            let replacer = $scope.replacer;
+    		var occured = Array(26).fill(false);
+            $scope.remainingLetters = "";
+
+    		for (var i = 0; i < replacer.length; i++) {
+
+    			var currentChar = replacer.charAt(i);
+    			occured[currentChar.charCodeAt(0) - "a".charCodeAt(0)] = true;
+
+    		}
+
+    		for (var i = 0; i < occured.length; i++) {
+
+    			if (!occured[i]) {
+                    $scope.remainingLetters += String.fromCharCode(i + "a".charCodeAt(0));
+    			}
+    		}
+
+
+    	}
+
+    	$scope.containsDuplicates = function (str) {
+
+            var occured = Array(26).fill(false);
+            str = str.toLowerCase();
+
+            for (var i = 0; i < str.length; i++) {
+
+                var index = (str.charAt(i)).charCodeAt(0) - "a".charCodeAt(0);
+
+                if (occured[index])
+                    return true;
+
+                else
+                    occured[index] = true;
+
+            }
+
+            return false;
+
+        }
 
 
     }
