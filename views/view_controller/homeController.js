@@ -1,12 +1,69 @@
-var appname = angular.module('CodeBreaker', []);
-appname.controller('homeController', ['$scope',
-    function($scope) {
+var CodeBreaker = angular.module('CodeBreaker', []);
+CodeBreaker.controller('homeController', ['$scope','$http',
+    function($scope, $http) {
+
+
+        $http.get("http://localhost:8080/user.json").then(function(response){
+
+            $scope.user = response.data.user;
+
+        });
+
+        $scope.getSavedCiphers = function(username) {
+
+            $http({
+                url: '/savedCiphers',
+                method: "POST",
+                data: {'username': username}
+            })
+
+            .then(function(response) {
+                $scope.ciphers = response.data;
+            })
+
+        }
+
+        $scope.saveCipher = function (username, isDecrypted, encryptedTextOnly, cipher, plainText, replacee, replacer) {
+
+            $http({
+                url: '/saveCipher/substitution',
+                method: "POST",
+                data: {'username': username, 'isDecrypted': isDecrypted, 'encryptedTextOnly': encryptedTextOnly, 'cipher': cipher, 'plainText': plainText, 'cipherType': 'substitution', 'replacee': replacee, 'replacer': replacer}
+            })
+            .then(function(response) {
+
+                $scope.isSavedSuccessfully = true;
+                $scope.savingError = false;
+
+            },
+            function(response) {
+
+                alert('failure')
+                alert(response)
+
+                $scope.isSavedSuccessfully = false;
+                $scope.savingError = true;
+
+            });
+
+        }
+
+        $scope.getColor = function() {
+            for (var i = 0; i < $scope.replacedText.length; i++) {
+                let currentChar = $scope.replacedText[i];
+                if (currentChar <= 'z' && currentChar >= 'a')
+                    $scope.replacedText.replace(/\#word/gi, '<span>$1</span>');
+            }
+            return
+        };
+
 
         $scope.cipherChanged = function() {
 
             $scope.printFrequencies();
             $scope.replace();
             $scope.remainingLetters = "";
+            $scope.isSavedSuccessfully = false;
 
         }
 
@@ -14,22 +71,15 @@ appname.controller('homeController', ['$scope',
 
             $scope.replace();
             $scope.remainingLetters = "";
+            $scope.isSavedSuccessfully = false;
 
         }
-
-        $scope.remainingLettersBtnClicked = function() {
-
-            $scope.getRemainingLetters();
-
-        }
-
 
         $scope.replace = function() {
 
-
-    		let text = angular.element($('#cipher')).val();
-            let replacee = $scope.replacee;
-            let replacer = $scope.replacer;
+    		let text = $scope.cipher;
+            let replacee = $scope.replacee.text;
+            let replacer = $scope.replacer.text;
             let error = false;
             $scope.showDuplicatesErrorMessage = false;
             $scope.showLengthErrorMessage = false;
@@ -70,6 +120,8 @@ appname.controller('homeController', ['$scope',
 
     			if (index != -1) {
     				$scope.replacedText += replacer.charAt(index);
+                    // let lastLetter = $scope.replacedText.charAt(i);
+                    // $scope.replacedText.replaceAt(i, "<span style='color: red;'>" + lastLetter + "</span>");
     			}
 
     			else {
@@ -168,10 +220,10 @@ appname.controller('homeController', ['$scope',
 
     	$scope.getRemainingLetters = function() {
 
-            let replacer = $scope.replacer;
+            let replacer = $scope.replacer.text;
     		var occured = Array(26).fill(false);
             $scope.remainingLetters = "";
-
+            console.log(replacer);
     		for (var i = 0; i < replacer.length; i++) {
 
     			var currentChar = replacer.charAt(i);
@@ -185,7 +237,6 @@ appname.controller('homeController', ['$scope',
                     $scope.remainingLetters += String.fromCharCode(i + "a".charCodeAt(0));
     			}
     		}
-
 
     	}
 
@@ -210,7 +261,43 @@ appname.controller('homeController', ['$scope',
 
         }
 
+        $scope.switchFocus = function (field) {
+
+            if ($scope.switchCheckBox) {
+                document.getElementById(field).focus();
+            }
+
+
+        }
+
+        $scope.replacee = {
+
+            text: "",
+            isFocused: false
+
+        }
+
+        $scope.replacer = {
+
+            text: "",
+            isFocused: false
+
+        }
+
+        $scope.switchCheckBox = true;
 
     }
 
+
 ]);
+
+// CodeBreaker.filter("AddSpan", function() {
+//   return function(item) {
+//
+//     if (item.indexOf("#word") > -1) {
+//       return "<span class='x'>" + item + "</span>";
+//     } else {
+//       return item;
+//     }
+//   }
+// });

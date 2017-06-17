@@ -2,24 +2,22 @@ var mongoose = require('mongoose');
 
 var cipherSchema = mongoose.Schema({
 
-    type: {
-        type: String;
-        required: true;
-    }
+    cipherType: {
+        type: String,
+        required: true
+    },
 
     encryptedText: {
-        type: String;
-        required: true;
+        type: String,
+        required: true
     },
 
-    decryptedText: {
-        type: String;
-    },
+    decryptedText: String,
 
-    isDecrypted {
-        type: Boolean;
-        default: false;
-        required: true;
+    isDecrypted: {
+        type: Boolean,
+        default: false,
+        required: true
     }
 
 })

@@ -1,9 +1,18 @@
 var mongoose = require('mongoose');
 
 var substitutionCipherSchema = mongoose.Schema({
-    replacee: String;
-    replacer: String;
-})
+
+    cipherID: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'ciphers',
+        required: true
+    },
+
+    replacee: String,
+
+    replacer: String
+    
+});
 
 var substitutionCipher = mongoose.model("substitutionciphers", substitutionCipherSchema);
 

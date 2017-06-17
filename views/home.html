@@ -46,12 +46,21 @@
             </div>
 
             <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
-                </li>
-                <li>
-                    <a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a>
-                </li>
+
+                    <li class="notLoggedIn" ng-show="!user">
+                        <a href="/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a>
+                    </li>
+                    <li class="notLoggedIn" ng-show="!user">
+                        <a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+                    </li>
+
+                    <li class="loggedIn" ng-show="user" style="color: white;">
+                        <a href="#"> Hi, {{user.profile.firstName}}</a>
+                    </li>
+                    <li class="loggedIn" ng-show="user">
+                        <a href="/signout"> Sign Out</a>
+                    </li>
+
             </ul>
 
         </div>
@@ -59,16 +68,18 @@
 
     <div class="container-fluid" id="mainContainer">
         <div>
+            Enter your cipher<br />
             <textarea id="cipher" placeholder="type your cipher" rows="5" cols="50" ng-model="cipher" ng-change="cipherChanged()"></textarea>
         </div>
 
-        <div id="replace">
-            <input id="replacee" type="text" placeholder="Put the String that is to be replaced" size="30" ng-model="replacee" ng-change="replaceChanged()"/>
+        <div id="replace" style="font-family: Liberation Mono;">
+            Replacee: <input id="replacee" type="text" placeholder="Put the String that is to be replaced" size="37" ng-model="replacee.text" ng-change="replaceChanged(); switchFocus('replacer')" />
             <br />
-            <input id="replacer" type="text" placeholder="Put the String that is to replace" size="30" ng-model="replacer" ng-change="replaceChanged()"/>
+            Replacer: <input id="replacer" type="text" placeholder="Put the String that is to replace" size="37" ng-model="replacer.text" ng-change="replaceChanged(); switchFocus('replacee')" />
+            <input type="checkbox" ng-model="switchCheckBox" /><span> Switch focus<br />
         </div>
 
-        <div id="replaced">
+        <div id="replaced" style="font-family: Liberation Mono;">
             <p>
                 <span style="white-space:pre-wrap;font-size:2em;">{{replacedText}}</span>
             </p>
@@ -87,7 +98,7 @@
             <p>
                 Click the below button if you want to show the letters that have not yet replaced any other letter
             </p>
-            <button id="remainingLettersBtn" type="button" ng-click="remainingLettersBtnClicked()">Show</button>
+            <button id="remainingLettersBtn" type="button" ng-click="getRemainingLetters()">Show</button>
             <p>
                 {{remainingLetters}}
             </p>
@@ -97,6 +108,33 @@
             <p>
                 <span style="white-space:pre-wrap;">{{frequenciesString}}</span>
             </p>
+        </div>
+
+        <div id="savingCihper" ng-show="user">
+            <div id="notSaved" ng-show="!isSavedSuccessfully">
+                <p>
+                    Here is what you need to save the cipher if you want to go back to it later
+                </p>
+                <input type="checkbox" ng-model="isDecrypted" /> This cipher was completely decrypted<br />
+                <div class="notDecrypted" ng-show="!isDecrypted">
+                    <input type="checkbox" ng-model="encryptedTextOnly" /><span> Save only the encrypted text<br />
+                </div>
+                    <button type="button" ng-click="saveCipher(user.profile.username, isDecrypted, encryptedTextOnly, cipher, replacedText, replacee.text, replacer.text)">Save</button>
+            </div>
+
+            <div class="alert alert-success" ng-show="isSavedSuccessfully">
+                <p>
+                    Your cipher was saved successfully
+                </p>
+            </div>
+
+            <div>
+                <button type="button" ng-click="getSavedCiphers(user.profile.username)">Log My saved ciphers</button>
+            </div>
+
+            <div class="alert alert-info" ng-show="ciphers">
+                {{ciphers}}
+            </div>
         </div>
     </div>
 
