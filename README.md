@@ -1,2 +1,2 @@
 # CodeBreaker
-Under Development
+A simple playground web app to experiment with substitution ciphers presented in the book ”Cracking Codes & Cryptograms For Dummies". Given the cipher, it shows the frequency of each character and given the substitution characters, it replaces every occurence of the cipther character with the substitution character. This made it much easier to decipher any monoalphabetic substitution cipher. More features and Functionalities could have been added but due to shortage in time, I could not.
