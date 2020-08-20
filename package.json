@@ -7,7 +7,7 @@
   "license": "ISC",
   "dependencies": {
     "angular-stripe": "^4.2.13",
-    "bcrypt": "^1.0.2",
+    "bcrypt": "^5.0.0",
     "body-parser": "latest",
     "bower": "latest",
     "cookie-parser": "latest",
